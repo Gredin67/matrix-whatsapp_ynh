@@ -1,18 +1,18 @@
 {
-    "name": "YunoHost example app",
-    "id": "ynhexample",
+    "name": "Matrix-Whatsapp bridge",
+    "id": "ynhmautrixwhatsapp",
     "packaging_format": 1,
     "description": {
-        "en": "Example package for YunoHost application.",
-        "fr": "Exemple de package d’application pour YunoHost."
+        "en": "Matrix-WhatsApp puppeting bridge packaged as a YunoHost service.",
+        "fr": "Passerelle WhatsApp exploitant matrix-synapse et un service d'application matrix packagé comme un service YunoHost."
     },
     "version": "1.0~ynh1",
-    "url": "https://example.com",
-    "license": "free",
+    "url": "https://github.com/tulir/mautrix-whatsapp",
+    "license": "GNU Affero General Public License v3.0",
     "maintainer": {
-        "name": "John doe",
-        "email": "john.doe@example.com",
-        "url": "http://example.com"
+        "name": "Gredin67",
+        "email": "ghentz@mailz.org",
+        "url": "https://github.com/Gredin67/mautrix-whatsapp_ynh"
     },
     "requirements": {
         "yunohost": ">= 3.5"
@@ -20,38 +20,19 @@
     "multi_instance": true,
     "services": [
         "nginx",
-        "php7.0-fpm",
-        "mysql"
+        "matrix-synapse",
+        "postgres"
     ],
     "arguments": {
         "install" : [
             {
-                "name": "domain",
-                "type": "domain",
-                "ask": {
-                    "en": "Choose a domain name for ynhexample",
-                    "fr": "Choisissez un nom de domaine pour ynhexample"
-                },
-                "example": "example.com"
-            },
-            {
-                "name": "path",
-                "type": "path",
-                "ask": {
-                    "en": "Choose a path for ynhexample",
-                    "fr": "Choisissez un chemin pour ynhexample"
-                },
-                "example": "/example",
-                "default": "/example"
-            },
-            {
-                "name": "admin",
+                "name": "whatsappbot",
                 "type": "user",
                 "ask": {
-                    "en": "Choose an admin user",
-                    "fr": "Choisissez l’administrateur"
+                    "en": "Choose the name of the whatsapp bot",
+                    "fr": "Choisissez le nom du robot whatsapp"
                 },
-                "example": "johndoe"
+                "example": "whatsappbot"
             },
             {
                 "name": "is_public",
@@ -60,7 +41,7 @@
                     "en": "Is it a public application?",
                     "fr": "Est-ce une application publique ?"
                 },
-                "default": true
+                "default": false
             },
             {
                 "name": "language",

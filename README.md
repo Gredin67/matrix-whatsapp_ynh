@@ -9,16 +9,16 @@
 
 # Example app for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/REPLACEBYYOURAPP.svg)](https://dash.yunohost.org/appci/app/REPLACEBYYOURAPP)  
-[![Install REPLACEBYYOURAPP with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=REPLACEBYYOURAPP)
+[![Integration level](https://dash.yunohost.org/integration/mautrix-whatsapp_ynh.svg)](https://dash.yunohost.org/appci/app/mautrix-whatsapp_ynh)  
+[![Install Mautrix-WhatsApp with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=mautrix-whatsapp_ynh)
 
 *[Lire ce readme en français.](./README_fr.md)*
 
-> *This package allow you to install REPLACEBYYOURAPP quickly and simply on a YunoHost server.  
+> *This package allows you to install Mautrix-WhatsApp quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
 
 ## Overview
-Quick description of this app.
+Matrix-WhatsApp puppeting bridge packaged as a YunoHost service.
 
 **Shipped version:** 1.0
 
@@ -36,7 +36,7 @@ How to configure this app: by an admin panel, a plain file with SSH, or any othe
 
 ## Documentation
 
- * Official documentation: Link to the official documentation of this app
+ * Official documentation: https://github.com/tulir/mautrix-whatsapp/wiki
  * YunoHost documentation: If specific documentation is needed, feel free to contribute.
 
 ## YunoHost specific features
@@ -61,13 +61,13 @@ Can the app be used by multiple users?
 * Other information you would add about this application
 
 **More information on the documentation page:**  
-https://yunohost.org/packaging_apps
+https://github.com/tulir/mautrix-whatsapp/wiki
 
 ## Links
 
- * Report a bug: https://github.com/YunoHost-Apps/REPLACEBYYOURAPP_ynh/issues
- * App website: Link to the official website of this app
- * Upstream app repository: Link to the official repository of the upstream app
+ * Report a bug: https://github.com/YunoHost-Apps/mautrix-whatsapp_ynh/issues
+ * App website: https://github.com/Gredin67/mautrix-whatsapp_ynh
+ * Upstream app repository: https://github.com/tulir/mautrix-whatsapp
  * YunoHost website: https://yunohost.org/
 
 ---

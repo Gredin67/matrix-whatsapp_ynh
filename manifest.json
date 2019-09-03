@@ -8,7 +8,7 @@
     },
     "version": "1.0~ynh1",
     "url": "https://github.com/tulir/mautrix-whatsapp",
-    "license": "GNU Affero General Public License v3.0",
+    "license": "free",
     "maintainer": {
         "name": "Gredin67",
         "email": "ghentz@mailz.org",
@@ -33,38 +33,6 @@
                     "fr": "Choisissez le nom du robot whatsapp"
                 },
                 "example": "whatsappbot"
-            },
-            {
-                "name": "is_public",
-                "type": "boolean",
-                "ask": {
-                    "en": "Is it a public application?",
-                    "fr": "Est-ce une application publique ?"
-                },
-                "default": false
-            },
-            {
-                "name": "language",
-                "type": "string",
-                "ask": {
-                    "en": "Choose the application language",
-                    "fr": "Choisissez la langue de l'application"
-                },
-                "choices": ["fr", "en"],
-                "default": "fr"
-            },
-            {
-                "name": "password",
-                "type": "password",
-                "ask": {
-                    "en": "Set the administrator password",
-                    "fr": "Définissez le mot de passe administrateur"
-                },
-                "help": {
-                    "en": "Use the help field to add an information for the admin about this question.",
-                    "fr": "Utilisez le champ aide pour ajouter une information à l'intention de l'administrateur à propos de cette question."
-                },
-                "example": "Choose a password"
             }
         ]
     }

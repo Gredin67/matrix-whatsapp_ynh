@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="golang postgresql postgresql-client matrix-synapse"
+pkg_dependencies="golang postgresql postgresql-client"
 
 #=================================================
 # PERSONAL HELPERS

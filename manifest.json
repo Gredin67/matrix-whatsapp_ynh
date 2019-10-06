@@ -25,6 +25,15 @@
     ],
     "arguments": {
         "install" : [
+			{
+				"name": "domain",
+				"type": "domain",
+				"ask": {
+					"en": "Choose the domain name where Synapse is installed",
+					"fr": "Choisissez le nom domaine associé à Synapse"
+				},
+				"example": "domain.org"
+            },            
             {
                 "name": "whatsappbot",
                 "type": "user",

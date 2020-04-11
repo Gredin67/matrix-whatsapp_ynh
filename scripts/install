@@ -26,7 +26,7 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 #path_url=$YNH_APP_ARG_PATH
-#admin=$YNH_APP_ARG_ADMIN
+admin=$YNH_APP_ARG_ADMIN
 #is_public=$YNH_APP_ARG_IS_PUBLIC
 #language=$YNH_APP_ARG_LANGUAGE
 #password=$YNH_APP_ARG_PASSWORD
@@ -71,7 +71,7 @@ ynh_script_progression --message="Storing installation settings..." --time --wei
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 #ynh_app_setting_set --app=$app --key=path --value=$path_url
-#ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=admin --value=$admin
 #ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #ynh_app_setting_set --app=$app --key=language --value=$language
 
@@ -199,7 +199,13 @@ ynh_add_fpm_config
 #=================================================
 # SPECIFIC SETUP
 #=================================================
-# ...
+
+cd /opt/yunhost/mautrix-whatsapp
+go build
+#Copy example-config.yaml to config.yaml
+cp example-config.yaml config.yaml
+
+
 #=================================================
 
 #=================================================
@@ -230,27 +236,27 @@ ynh_add_systemd_config
 ### so we're going to use curl to automatically fill the fields and submit the
 ### forms.
 
-# Set right permissions for curl install
-chown -R $app: $final_path
+## Set right permissions for curl install
+#chown -R $app: $final_path
 
-# Set the app as temporarily public for curl call
-ynh_script_progression --message="Configuring SSOwat..." --time --weight=1
-ynh_app_setting_set --app=$app --key=skipped_uris --value="/"
-# Reload SSOwat config
-yunohost app ssowatconf
+## Set the app as temporarily public for curl call
+#ynh_script_progression --message="Configuring SSOwat..." --time --weight=1
+#ynh_app_setting_set --app=$app --key=skipped_uris --value="/"
+## Reload SSOwat config
+#yunohost app ssowatconf
 
-# Reload Nginx
-ynh_systemd_action --service_name=nginx --action=reload
+## Reload Nginx
+#ynh_systemd_action --service_name=nginx --action=reload
 
-# Installation with curl
-ynh_script_progression --message="Finalizing installation..." --time --weight=1
-ynh_local_curl "/INSTALL_PATH" "key1=value1" "key2=value2" "key3=value3"
+## Installation with curl
+#ynh_script_progression --message="Finalizing installation..." --time --weight=1
+#ynh_local_curl "/INSTALL_PATH" "key1=value1" "key2=value2" "key3=value3"
 
-# Remove the public access
-if [ $is_public -eq 0 ]
-then
-	ynh_app_setting_delete --app=$app --key=skipped_uris
-fi
+## Remove the public access
+#if [ $is_public -eq 0 ]
+#then
+#	ynh_app_setting_delete --app=$app --key=skipped_uris
+#fi
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -259,7 +265,95 @@ fi
 ### `ynh_replace_string` is used to replace a string in a file.
 ### (It's compatible with sed regular expressions syntax)
 
-ynh_replace_string --match_string="match_string" --replace_string="replace_string" --target_file="$final_path/CONFIG_FILE"
+#Update the config to your liking.
+    #You need to make sure that the address and domain field point to your homeserver.
+
+# Homeserver details.
+#homeserver:
+    # The address that this appservice can use to connect to the homeserver.
+    #"address: https://example.com"
+ynh_replace_string --match_string="address: https://example.com" --replace_string="address: https://$domain" --target_file="$final_path/config.yaml"
+    # The domain of the homeserver (for MXIDs, etc).
+    #"domain: example.com"
+ynh_replace_string --match_string="domain: example.com" --replace_string="domain: "$domain --target_file="$final_path/config.yaml"
+
+# Application service host/registration related details.
+# Changing these values requires regeneration of the registration.
+#appservice:
+    # The address that the homeserver can use to connect to this appservice.
+ynh_replace_string --match_string="address: http://localhost:29318" --replace_string="address: http://0.0.0.0:8449" --target_file="$final_path/config.yaml"
+
+    # The hostname and port where this appservice should listen.
+#ynh_replace_string --match_string="hostname: 0.0.0.0" --replace_string="hostname: 0.0.0.0" --target_file="$final_path/config.yaml"
+ynh_replace_string --match_string="port: 29318" --replace_string="port: 8449" --target_file="$final_path/config.yaml"
+
+    # Database config.
+    #database:
+        # The database type. "sqlite3" and "postgres" are supported.
+ynh_replace_string --match_string="type: sqlite3" --replace_string="type: postgres" --target_file="$final_path/config.yaml"
+        # The database URI.
+        #   SQLite: File name is enough. https://github.com/mattn/go-sqlite3#connection-string
+        #   Postgres: Connection string. For example, postgres://user:password@host/database
+ynh_replace_string --match_string="uri: mautrix-whatsapp.db" --replace_string="uri: postgres://postgres@localhost:5432/mautrix" --target_file="$final_path/config.yaml"
+        
+        # Maximum number of connections. Mostly relevant for Postgres.
+ynh_replace_string --match_string="max_open_conns: 20" --replace_string="max_open_conns: 20" --target_file="$final_path/config.yaml"
+ynh_replace_string --match_string="max_idle_conns: 2" --replace_string="max_idle_conns: 2" --target_file="$final_path/config.yaml"
+
+    #You will also need to add your user of admin user under the permissions section.
+    # Permissions for using the bridge.
+    # Permitted values:
+    # relaybot - Talk through the relaybot (if enabled), no access otherwise
+    #     user - Access to use the bridge to chat with a WhatsApp account.
+    #    admin - User level and some additional administration tools
+    # Permitted keys:
+    #        * - All Matrix users
+    #   domain - All users on that homeserver
+    #     mxid - Specific user
+    #permissions:
+#ynh_replace_string --match_string=""*": relaybot" --replace_string=""*": relaybot" --target_file="$final_path/config.yaml"
+#ynh_replace_string --match_string=""example.com": user" --replace_string=""example.com": user" --target_file="$final_path/config.yaml"
+#"@admin:example.com": admin
+ynh_replace_string --match_string="@admin" --replace_string="@$admin" --target_file="$final_path/config.yaml"
+#        "*": relaybot
+#        "example.com": user
+#        "@admin:example.com": admin
+
+#    relaybot:
+#        # Whether or not relaybot support is enabled.
+#        enabled: false
+#        # The management room for the bot. This is where all status notifications are posted and
+#        # in this room, you can use `!wa <command>` instead of `!wa relaybot <command>`. Omitting
+#        # the command prefix completely like in user management rooms is not possible.
+#        management: !foo:example.com
+#        # List of users to invite to all created rooms that include the relaybot.
+#        invites: []
+#        # The formats to use when sending messages to WhatsApp via the relaybot.
+#        message_formats:
+#            m.text: "<b>{{ .Sender.Displayname }}</b>: {{ .Message }}"
+#            m.notice: "<b>{{ .Sender.Displayname }}</b>: {{ .Message }}"
+#            m.emote: "* <b>{{ .Sender.Displayname }}</b> {{ .Message }}"
+#            m.file: "<b>{{ .Sender.Displayname }}</b> sent a file"
+#            m.image: "<b>{{ .Sender.Displayname }}</b> sent an image"
+#            m.audio: "<b>{{ .Sender.Displayname }}</b> sent an audio file"
+#            m.video: "<b>{{ .Sender.Displayname }}</b> sent a video"
+#            m.location: "<b>{{ .Sender.Displayname }}</b> sent a location"
+
+#Generate the appservice registration file by running ./mautrix-whatsapp -g.
+    #You can use the -c and -r flags to change the location of the config and registration files. They default to config.yaml and registration.yaml respectively.
+./mautrix-whatsapp -g
+#Add the path to the registration file (registration.yaml by default) to your synapse homeserver.yaml under app_service_config_files. 
+# A list of application service config files to use
+#
+#app_service_config_files:
+#  - app_service_1.yaml
+#    - "/etc/matrix-synapse/registration.yaml"
+ynh_replace_string --match_string="#  - app_service_1.yaml" --replace_string="  - /opt/yunohost/mautrix-whatsapp/registration.yaml" --target_file="/etc/matrix-synapse/homeserver.yaml"
+#You will then need to restart the synapse server. Remember to restart it every time the registration file is regenerated.
+service matrix-synapse restart
+#Run the bridge with 
+./mautrix-whatsapp.
+
 
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM
@@ -270,7 +364,8 @@ ynh_replace_string --match_string="match_string" --replace_string="replace_strin
 ### you can make a backup of this file before modifying it again if the admin had modified it.
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
+ynh_store_file_checksum --file="$final_path/config.yaml"
+ynh_store_file_checksum --file="/etc/matrix-synapse/homeserver.yaml"
 
 #=================================================
 # GENERIC FINALIZATION

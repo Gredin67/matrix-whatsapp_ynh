@@ -51,7 +51,7 @@
                     "fr": "Choisissez le nom du robot whatsapp"
                 },
                 "example": "whatsappbot"
-            }
+            },
 	    {
                 "name": "authorized",
                 "type": "domain",
@@ -60,7 +60,7 @@
                     "fr": "Choisissez un serveur matrix dont tous les utilisateurs sont autorisés à utiliser le robot whatsapp"
                 },
                 "example": "matrix.org"
-            },
+            }
 
         ]
     }

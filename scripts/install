@@ -78,20 +78,20 @@ ynh_app_setting_set --app=$app --key=domain --value=$domain
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
-# FIND AND OPEN A PORT
-#=================================================
-ynh_script_progression --message="Configuring firewall..." --time --weight=1
-
-### Use these lines if you have to open a port for the application
-### `ynh_find_port` will find the first available port starting from the given port.
-### If you're not using these lines:
-###		- Remove the section "CLOSE A PORT" in the remove script
-
-# Find a free port
-port=$(ynh_find_port --port=8095)
-# Open this port
-ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
-ynh_app_setting_set --app=$app --key=port --value=$port
+## FIND AND OPEN A PORT
+##=================================================
+#ynh_script_progression --message="Configuring firewall..." --time --weight=1
+#
+#### Use these lines if you have to open a port for the application
+#### `ynh_find_port` will find the first available port starting from the given port.
+#### If you're not using these lines:
+####		- Remove the section "CLOSE A PORT" in the remove script
+#
+## Find a free port
+#port=$(ynh_find_port --port=8095)
+## Open this port
+#ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
+#ynh_app_setting_set --app=$app --key=port --value=$port
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -111,7 +111,7 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # CREATE A POSTGRES DATABASE
 #=================================================
-ynh_script_progression --message="Creating a PostGreSQL database..." --time --weight=1
+#ynh_script_progression --message="Creating a PostGreSQL database..." --time --weight=1
 
 ### Use these lines if you need a database for the application.
 ### `ynh_mysql_setup_db` will create a database, an associated user and a ramdom password.
@@ -122,16 +122,16 @@ ynh_script_progression --message="Creating a PostGreSQL database..." --time --we
 ###		- Remove also the section "REMOVE THE MYSQL DATABASE" in the remove script
 ###		- As well as the section "RESTORE THE MYSQL DATABASE" in the restore script
 
-db_name=$(ynh_sanitize_dbid --db_name=$app)
-db_user=$db_name
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
+#db_name=$(ynh_sanitize_dbid --db_name=$app)
+#db_user=$db_name
+#ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+#ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
 # CREATE A MYSQL DATABASE
 #=================================================
-ynh_script_progression --message="Creating a MySQL database..." --time --weight=1
-
+#ynh_script_progression --message="Creating a MySQL database..." --time --weight=1
+#
 ### Use these lines if you need a database for the application.
 ### `ynh_mysql_setup_db` will create a database, an associated user and a ramdom password.
 ### The password will be stored as 'mysqlpwd' into the app settings,
@@ -140,12 +140,12 @@ ynh_script_progression --message="Creating a MySQL database..." --time --weight=
 ###		- Remove the section "BACKUP THE MYSQL DATABASE" in the backup script
 ###		- Remove also the section "REMOVE THE MYSQL DATABASE" in the remove script
 ###		- As well as the section "RESTORE THE MYSQL DATABASE" in the restore script
-
-db_name=$(ynh_sanitize_dbid --db_name=$app)
-db_user=$db_name
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
-ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
-
+#
+#db_name=$(ynh_sanitize_dbid --db_name=$app)
+#db_user=$db_name
+#ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+#ynh_mysql_setup_db --db_user=$db_user --db_name=$db_name
+#
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================

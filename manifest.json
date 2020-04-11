@@ -1,6 +1,6 @@
 {
     "name": "Matrix-Whatsapp bridge",
-    "id": "mautrixwa",
+    "id": "mautrix-whatsapp",
     "packaging_format": 1,
     "description": {
         "en": "Matrix-WhatsApp puppeting bridge packaged as a YunoHost service.",

@@ -36,7 +36,7 @@
             },            
 	    {
                 "name": "admin",
-                "type": "user",
+                "type": "string",
                 "ask": {
                     "en": "Choose the admin user of the whatsapp bot",
                     "fr": "Choisissez l’administrateur du robot whatsapp"

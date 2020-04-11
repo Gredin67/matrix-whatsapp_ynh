@@ -30,10 +30,19 @@
 				"type": "domain",
 				"ask": {
 					"en": "Choose the domain name where Synapse is installed",
-					"fr": "Choisissez le nom domaine associé à Synapse"
+					"fr": "Choisissez le nom de domaine associé à Synapse"
 				},
 				"example": "domain.org"
             },            
+	    {
+                "name": "admin",
+                "type": "user",
+                "ask": {
+                    "en": "Choose the admin user of the whatsapp bot",
+                    "fr": "Choisissez l’administrateur du robot whatsapp"
+                },
+                "example": "@johndoe:domain.org or @johndoe:matrix.org"
+            },
             {
                 "name": "whatsappbot",
                 "type": "user",
@@ -43,6 +52,16 @@
                 },
                 "example": "whatsappbot"
             }
+	    {
+                "name": "authorized",
+                "type": "domain",
+                "ask": {
+                    "en": "Choose a matrix server authorized to use the whatsapp bot",
+                    "fr": "Choisissez un serveur matrix dont tous les utilisateurs sont autorisés à utiliser le robot whatsapp"
+                },
+                "example": "matrix.org"
+            },
+
         ]
     }
 }

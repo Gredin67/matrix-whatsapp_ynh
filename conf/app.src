@@ -1,6 +1,6 @@
 SOURCE_URL=https://github.com/tulir/mautrix-whatsapp.git
-#SOURCE_SUM=sha256 checksum
-#SOURCE_SUM_PRG=sha256sum
+SOURCE_SUM=064b5b8fedb6896d04509aa0e094a8d9f83426c2
+SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=git
 SOURCE_IN_SUBDIR=true
 #SOURCE_FILENAME=

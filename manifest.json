@@ -44,10 +44,10 @@
             },
             {
                 "name": "whatsappbot",
-                "type": "user",
+                "type": "string",
                 "ask": {
-                    "en": "Choose the name of the whatsapp bot",
-                    "fr": "Choisissez le nom du robot whatsapp"
+                    "en": "Choose the name of the yunohost user that will be created as a whatsapp bot",
+                    "fr": "Choisissez le nom de l'utilisateur yunohost qui sera créé comme robot whatsapp"
                 },
                 "example": "whatsappbot"
             },

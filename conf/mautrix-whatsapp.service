@@ -1,0 +1,13 @@
+[Unit]
+Description=Matrix Whatsapp bridge
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/yunohost/mautrix-whatsapp
+ExecStart=/opt/yunohost/mautrix-whatsapp/mautrix-whatsapp
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

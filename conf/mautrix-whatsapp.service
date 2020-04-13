@@ -1,13 +1,15 @@
 [Unit]
 Description=Matrix Whatsapp bridge
-After=network.target
+After=matrix-synapse.service
 
 [Service]
 Type=simple
-User=root
-WorkingDirectory=/opt/yunohost/mautrix-whatsapp
-ExecStart=/opt/yunohost/mautrix-whatsapp/mautrix-whatsapp
+User=mautrix-__APP__
+WorkingDirectory=/opt/yunohost/mautrix-__APP__
+ExecStartPre=/opt/yunohost/mmautrix-__APP__/mautrix-whatsapp --config-path=/opt/yunohost/mmautrix-__APP__/config.yaml --config-path=/etc/matrix-synapse/homeserver.yaml --generate-keys
+ExecStart=/opt/yunohost/mautrix-__APP__/mautrix-whatsapp --config-path=/opt/yunohost/mmautrix-__APP__/config.yaml --config-path=/etc/matrix-synapse/homeserver.yaml
 Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target

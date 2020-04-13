@@ -8,7 +8,7 @@
 
 source _common.sh
 #source /opt/yunohost/mautrix-whatsapp/_ynh_install_extra_app_dependencies
-source /usr/share/yunohost/helpers/_ynh_install_extra_app_dependencies
+#source /usr/share/yunohost/helpers/_ynh_install_extra_app_dependencies
 source /usr/share/yunohost/helpers
 
 #=================================================

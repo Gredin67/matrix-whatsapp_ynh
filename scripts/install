@@ -29,7 +29,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 #path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
-whatsappbot=$YNH_APP_ARG_WHATSAPPBOT
+#whatsappbot=$YNH_APP_ARG_WHATSAPPBOT
 authorized=$YNH_APP_ARG_AUTHORIZED
 is_public=$YNH_APP_ARG_IS_PUBLIC
 #language=$YNH_APP_ARG_LANGUAGE
@@ -45,15 +45,15 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 ### The app instance name is probably what interests you most, since this is
 ### guaranteed to be unique. This is a good unique identifier to define installation path,
 ### db names, ...
-app=$YNH_APP_INSTANCE_NAME
+app="$YNH_APP_INSTANCE_NAME"
 
 #=================================================
 # SET CONSTANTS
 #=================================================
 
-mautrix_whatsapp_user="$app"
-mautrix_whatsapp_db_name="$app"
-mautrix_whatsapp_db_user="$app"
+mautrix_whatsapp_user="mautrix-$app"
+mautrix_whatsapp_db_name="mautrix_$app"
+mautrix_whatsapp_db_user="mautrix_$app"
 upstream_version=$(ynh_app_upstream_version)
 #report_stats="false"
 #allow_public_rooms="false"
@@ -74,7 +74,7 @@ ynh_script_progression --message="Validating installation parameters..." --time 
 
 ### If the app uses nginx as web server (written in HTML/PHP in most cases), the final path should be "/var/www/$app".
 ### If the app provides an internal web server (or uses another application server such as uwsgi), the final path should be "/opt/yunohost/$app"
-final_path=/opt/yunohost/$app
+final_path=/opt/yunohost/mautrix-$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
 # Register (book) web path
@@ -168,21 +168,8 @@ ynh_setup_source --dest_dir="$final_path"
 ynh_script_progression --message="Configuring system user..." --time --weight=1
 
 # Create a system user
-ynh_system_user_create --username=$whatsappbot
+ynh_system_user_create --username=$mautrix_whatsapp_user
 
-#=================================================
-# SPECIFIC SETUP
-#=================================================
-
-cd /opt/yunohost/mautrix-whatsapp
-echo 'export PATH=$PATH:/usr/lib/go-1.11/bin/' >> /etc/profile
-source /etc/profile
-go build
-#Copy example-config.yaml to config.yaml
-cp example-config.yaml config.yaml
-
-
-#=================================================
 
 #=================================================
 # SETUP SYSTEMD
@@ -201,8 +188,22 @@ ynh_script_progression --message="Configuring a systemd service..." --time --wei
 ###		- And the section "SETUP SYSTEMD" in the upgrade script
 
 # Create systemd config for mautrix-whatsapp
-cp ../conf/default_mautrix-whatsapp /etc/default/$app
-ynh_add_systemd_config --service=$app --template=mautrix-whatsapp.service
+cp ../conf/default_mautrix-$app /etc/default/mautrix-$app
+ynh_add_systemd_config --service=mautrix-$app --template=mautrix-$app.service
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+
+cd $final_path
+echo 'export PATH=$PATH:/usr/lib/go-1.11/bin/' >> /etc/profile
+source /etc/profile
+go build
+#Copy example-config.yaml to config.yaml
+cp example-config.yaml config.yaml
+
+
+#=================================================
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -299,7 +300,7 @@ fi
 #app_service_config_files:
 #  - app_service_1.yaml
 #    - "/etc/matrix-synapse/registration.yaml"
-ynh_replace_string --match_string="#  - app_service_1.yaml" --replace_string="  - /opt/yunohost/mautrix-whatsapp/registration.yaml" --target_file="/etc/matrix-synapse/homeserver.yaml"
+ynh_replace_string --match_string="#  - app_service_1.yaml" --replace_string="  - $final_path/registration.yaml" --target_file="/etc/matrix-synapse/homeserver.yaml"
 #You will then need to restart the synapse server. Remember to restart it every time the registration file is regenerated.
 service matrix-synapse restart
 #Run the bridge with 

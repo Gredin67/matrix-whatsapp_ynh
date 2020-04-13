@@ -237,7 +237,7 @@ ynh_replace_string --match_string="type: sqlite3" --replace_string="type: postgr
         # The database URI.
         #   SQLite: File name is enough. https://github.com/mattn/go-sqlite3#connection-string
         #   Postgres: Connection string. For example, postgres://user:password@host/database
-ynh_replace_string --match_string="uri: mautrix-whatsapp.db" --replace_string="uri: postgres://postgres@localhost:5432/mautrix" --target_file="$final_path/config.yaml"
+ynh_replace_string --match_string="uri: mautrix-whatsapp.db" --replace_string="uri: postgres://$mautrix_whatsapp_user@localhost:5432/$mautrix_whatsapp_db_name" --target_file="$final_path/config.yaml"
         
         # Maximum number of connections. Mostly relevant for Postgres.
 ynh_replace_string --match_string="max_open_conns: 20" --replace_string="max_open_conns: 20" --target_file="$final_path/config.yaml"

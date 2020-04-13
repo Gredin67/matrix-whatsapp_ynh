@@ -175,7 +175,8 @@ ynh_system_user_create --username=$whatsappbot
 #=================================================
 
 cd /opt/yunohost/mautrix-whatsapp
-source /usr/lib/go-1.11/bin
+echo 'export PATH=$PATH:/usr/lib/go-1.11/bin/' >> /etc/profile
+source /etc/profile
 go build
 #Copy example-config.yaml to config.yaml
 cp example-config.yaml config.yaml
@@ -267,7 +268,6 @@ then
 ynh_replace_string --match_string="example.com" --replace_string="domain" --target_file="$final_path/config.yaml"
 else
 ynh_replace_string --match_string="example.com" --replace_string="$authorized" --target_file="$final_path/config.yaml"
-
 fi
 
 #    relaybot:

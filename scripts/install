@@ -254,12 +254,19 @@ ynh_replace_string --match_string="max_idle_conns: 2" --replace_string="max_idle
     #   domain - All users on that homeserver
     #     mxid - Specific user
     #permissions:
-#ynh_replace_string --match_string=""*": relaybot" --replace_string=""*": relaybot" --target_file="$final_path/config.yaml"
-ynh_replace_string --match_string="@admin:example.com" --replace_string="$admin" --target_file="$final_path/config.yaml"
-ynh_replace_string --match_string="example.com" --replace_string="$authorized" --target_file="$final_path/config.yaml"
 #        "*": relaybot
 #        "example.com": user
 #        "@admin:example.com": admin
+#ynh_replace_string --match_string=""*": relaybot" --replace_string=""*": relaybot" --target_file="$final_path/config.yaml"
+ynh_replace_string --match_string="@admin:example.com" --replace_string="$admin" --target_file="$final_path/config.yaml"
+# Make app public if necessary
+if [ $is_public -eq 1 ]
+then
+ynh_replace_string --match_string="example.com" --replace_string="domain" --target_file="$final_path/config.yaml"
+else
+ynh_replace_string --match_string="example.com" --replace_string="$authorized" --target_file="$final_path/config.yaml"
+
+fi
 
 #    relaybot:
 #        # Whether or not relaybot support is enabled.
@@ -382,15 +389,15 @@ ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failreg
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..." --time --weight=1
-
-# Make app public if necessary
-if [ $is_public -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set --app=$app --key=unprotected_uris --value="/"
-fi
-
+#ynh_script_progression --message="Configuring SSOwat..." --time --weight=1
+#
+## Make app public if necessary
+#if [ $is_public -eq 1 ]
+#then
+#	# unprotected_uris allows SSO credentials to be passed anyway.
+#	ynh_app_setting_set --app=$app --key=unprotected_uris --value="/"
+#fi
+#
 #=================================================
 # RELOAD NGINX
 #=================================================

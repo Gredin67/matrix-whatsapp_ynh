@@ -1,6 +1,6 @@
 {
     "name": "Matrix-Whatsapp bridge",
-    "id": "mautrix-whatsapp",
+    "id": "whatsapp",
     "packaging_format": 1,
     "description": {
         "en": "Matrix-WhatsApp puppeting bridge packaged as a YunoHost service.",
@@ -34,7 +34,7 @@
 				"example": "domain.org"
             },            
 	    {
-                "name": "admin",
+                "name": "botadmin",
                 "type": "string",
                 "ask": {
                     "en": "Choose the matrix account admin of the whatsapp bot",
@@ -42,17 +42,8 @@
                 },
                 "example": "@johndoe:domain.org or @johndoe:matrix.org"
             },
-            {
-                "name": "whatsappbot",
-                "type": "string",
-                "ask": {
-                    "en": "Choose the name of the yunohost user that will be created as a whatsapp bot",
-                    "fr": "Choisissez le nom de l'utilisateur yunohost qui sera créé comme robot whatsapp"
-                },
-                "example": "whatsappbot"
-            },
 	    {
-                "name": "authorized",
+                "name": "botusers",
                 "type": "string",
                 "ask": {
                     "en": "Choose a matrix server authorized to use the whatsapp bot",

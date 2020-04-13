@@ -188,7 +188,7 @@ ynh_script_progression --message="Configuring a systemd service..." --time --wei
 ###		- And the section "SETUP SYSTEMD" in the upgrade script
 
 # Create systemd config for mautrix-whatsapp
-cp ../conf/default_mautrix-whatsapp /etc/default/mautrix-$app
+#cp ../conf/default_mautrix-whatsapp /etc/default/mautrix-$app
 ynh_add_systemd_config --service=mautrix-$app --template=mautrix-whatsapp.service
 
 #=================================================
@@ -293,14 +293,15 @@ fi
 
 #Generate the appservice registration file by running ./mautrix-whatsapp -g.
     #You can use the -c and -r flags to change the location of the config and registration files. They default to config.yaml and registration.yaml respectively.
-./mautrix-whatsapp -g
+./mautrix-whatsapp -g -r /etc/matrix-synapse/mautrix-whatsapp-registration.yaml
 #Add the path to the registration file (registration.yaml by default) to your synapse homeserver.yaml under app_service_config_files. 
 # A list of application service config files to use
 #
 #app_service_config_files:
 #  - app_service_1.yaml
 #    - "/etc/matrix-synapse/registration.yaml"
-ynh_replace_string --match_string="#  - app_service_1.yaml" --replace_string="  - $final_path/registration.yaml" --target_file="/etc/matrix-synapse/homeserver.yaml"
+ynh_replace_string --match_string="#app_service_config_files:" --replace_string="app_service_config_files:" --target_file="/etc/matrix-synapse/homeserver.yaml"
+ynh_replace_string --match_string="#  - app_service_1.yaml" --replace_string="  - '/etc/matrix-synapse/mautrix-whatsapp-registration.yaml'" --target_file="/etc/matrix-synapse/homeserver.yaml"
 #You will then need to restart the synapse server. Remember to restart it every time the registration file is regenerated.
 service matrix-synapse restart
 #Run the bridge with 
@@ -331,7 +332,22 @@ ynh_store_file_checksum --file="/etc/matrix-synapse/homeserver.yaml"
 ### that really need such authorization.
 
 # Set permissions to app files
-chown -R root: $final_path
+#chown -R root: $final_path
+
+# WARNING : theses command are used in INSTALL, UPGRADE, RESTORE
+# For any update do it in all files
+chown $mautrix_whatsapp_user:root -R $final_path
+#chmod 770 $final_path/Coturn_config_rotate.sh
+#chown $mautrix_whatsapp_user:root -R /var/lib/mautrix-$app
+#chown $mautrix_whatsapp_user:root -R /var/log/mautrix-$app
+#chown $mautrix_whatsapp_user:root -R /etc/mautrix-$app
+#chmod u=rwX,g=rX,o= -R /etc/mautrix-$app
+#chmod 600 /etc/matrix-$app/$server_name.signing.key
+#setfacl -R -m user:turnserver:rX  /etc/matrix-$app
+#setfacl -R -m user:turnserver:rwX  /var/log/matrix-$app
+
+chown matrix-synapse:root /etc/matrix-synapse/mautrix-whatsapp-registration.yaml
+chmod u=rwX,g=rX,o= /etc/matrix-synapse/mautrix-whatsapp-registration.yaml
 
 #=================================================
 # SETUP LOGROTATE
@@ -347,7 +363,7 @@ ynh_script_progression --message="Configuring log rotation..." --time --weight=1
 ###		- And the section "SETUP LOGROTATE" in the upgrade script
 
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_use_logrotate --logfile "/var/log/mautrix-$app"
 
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
@@ -361,7 +377,7 @@ ynh_use_logrotate
 ###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
 ###		- As well as the section "ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
 
-yunohost service add mautrix-$app --log "/var/log/mautrix-$app/mautrix-$app.log"
+yunohost service add mautrix-$app --log "/var/log/mautrix-$app/mautrix-whatsapp.log"
 # if using yunohost version 3.2 or more in the 'manifest.json', a description can be added
 #yunohost service add $app --description "$app daemon for XXX" --log "/var/log/$app/$app.log"
 
@@ -379,7 +395,7 @@ ynh_script_progression --message="Starting a systemd service..." --time --weight
 ###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
 # Start a systemd service
-ynh_systemd_action --service_name=mautrix-$app --action="start" --log_path="/var/log/mautrix-$app/mautrix-$app.log"
+ynh_systemd_action --service_name=mautrix-$app --action="start" --line_match="Bot now ready to bridge Whatsapp and Matrix users from $botusers" --log_path="/var/log/mautrix-$app/mautrix-whatsapp.log" --timeout=300
 
 #=================================================
 # SETUP FAIL2BAN
@@ -387,7 +403,8 @@ ynh_systemd_action --service_name=mautrix-$app --action="start" --log_path="/var
 ynh_script_progression --message="Configuring fail2ban..." --time --weight=1
 
 # Create a dedicated fail2ban config
-ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+#ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+ynh_add_fail2ban_config --use_template
 
 #=================================================
 # SETUP SSOWAT
@@ -404,12 +421,12 @@ ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failreg
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+#ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
 
-ynh_systemd_action --service_name=nginx --action=reload
+#ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --time --last
+ynh_script_progression --message="Installation of mautrix-$app completed" --time --last

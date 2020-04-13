@@ -159,8 +159,17 @@ ynh_script_progression --message="Setting up source files..." --time --weight=1
 ### `ynh_setup_source` use the file conf/app.src
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+
+# WARNING : theses command are used in INSTALL, UPGRADE (2 times)
+# For any update do it in all files
+if [ -n "$(uname -m | grep 64)" ]
+then
+    ynh_setup_source --dest_dir=$final_path/ --source_id="amd64_$(lsb_release --codename --short)"
+else
+
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
+fi
 
 #=================================================
 # CREATE DEDICATED USER

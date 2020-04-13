@@ -28,9 +28,9 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 #path_url=$YNH_APP_ARG_PATH
-admin=$YNH_APP_ARG_ADMIN
+botadmin=$YNH_APP_ARG_BOTADMIN
 #whatsappbot=$YNH_APP_ARG_WHATSAPPBOT
-authorized=$YNH_APP_ARG_AUTHORIZED
+botusers=$YNH_APP_ARG_BOTUSERS
 is_public=$YNH_APP_ARG_IS_PUBLIC
 #language=$YNH_APP_ARG_LANGUAGE
 #password=$YNH_APP_ARG_PASSWORD
@@ -87,11 +87,11 @@ ynh_script_progression --message="Storing installation settings..." --time --wei
 
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 #ynh_app_setting_set --app=$app --key=path --value=$path_url
-ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=botadmin --value=$botadmin
 ynh_app_setting_set --app=$app --key=mautrix_version --value=$upstream_version
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-ynh_app_setting_set --app=$app --key=whatsappbot --value=$whatsappbot
-ynh_app_setting_set --app=$app --key=authorized --value=$authorized
+#ynh_app_setting_set --app=$app --key=whatsappbot --value=$whatsappbot
+ynh_app_setting_set --app=$app --key=botusers --value=$botusers
 ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #ynh_app_setting_set --app=$app --key=language --value=$language
 
@@ -188,8 +188,8 @@ ynh_script_progression --message="Configuring a systemd service..." --time --wei
 ###		- And the section "SETUP SYSTEMD" in the upgrade script
 
 # Create systemd config for mautrix-whatsapp
-cp ../conf/default_mautrix-$app /etc/default/mautrix-$app
-ynh_add_systemd_config --service=mautrix-$app --template=mautrix-$app.service
+cp ../conf/default_mautrix-whatsapp /etc/default/mautrix-$app
+ynh_add_systemd_config --service=mautrix-$app --template=mautrix-whatsapp.service
 
 #=================================================
 # SPECIFIC SETUP
@@ -361,7 +361,7 @@ ynh_use_logrotate
 ###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
 ###		- As well as the section "ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
 
-yunohost service add $app --log "/var/log/$app/$app.log"
+yunohost service add mautrix-$app --log "/var/log/mautrix-$app/mautrix-$app.log"
 # if using yunohost version 3.2 or more in the 'manifest.json', a description can be added
 #yunohost service add $app --description "$app daemon for XXX" --log "/var/log/$app/$app.log"
 
@@ -379,7 +379,7 @@ ynh_script_progression --message="Starting a systemd service..." --time --weight
 ###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
 # Start a systemd service
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=mautrix-$app --action="start" --log_path="/var/log/mautrix-$app/mautrix-$app.log"
 
 #=================================================
 # SETUP FAIL2BAN
